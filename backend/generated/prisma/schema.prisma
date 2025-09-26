@@ -22,11 +22,43 @@ model Session {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  email    String  @unique
-  is_admin Boolean @default(false)
-  fname    String
-  lname    String
-  alias    String
-  password String
+  id               Int        @id @default(autoincrement())
+  email            String     @unique
+  is_admin         Boolean    @default(false)
+  fname            String
+  lname            String
+  alias            String
+  password         String
+  sentMessages     Messages[] @relation("sentMessages")
+  receivedMessages Messages[] @relation("receivedMessages")
+
+  ChatMessage ChatMessage[]
+}
+
+model Messages {
+  id         Int      @id @default(autoincrement())
+  senderId   Int
+  receiverId Int
+  content    String
+  timestamp  DateTime @default(now())
+
+  sender   User @relation("sentMessages", fields: [senderId], references: [id])
+  receiver User @relation("receivedMessages", fields: [receiverId], references: [id])
+}
+
+model ChatRoom {
+  id       Int           @id @default(autoincrement())
+  name     String        @unique
+  messages ChatMessage[]
+}
+
+model ChatMessage {
+  id         Int      @id @default(autoincrement())
+  chatRoomId Int
+  senderId   Int
+  content    String
+  timestamp  DateTime @default(now())
+
+  chatRoom ChatRoom @relation(fields: [chatRoomId], references: [id])
+  sender   User     @relation(fields: [senderId], references: [id])
 }

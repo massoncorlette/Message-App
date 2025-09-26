@@ -109,6 +109,27 @@ exports.Prisma.UserScalarFieldEnum = {
   password: 'password'
 };
 
+exports.Prisma.MessagesScalarFieldEnum = {
+  id: 'id',
+  senderId: 'senderId',
+  receiverId: 'receiverId',
+  content: 'content',
+  timestamp: 'timestamp'
+};
+
+exports.Prisma.ChatRoomScalarFieldEnum = {
+  id: 'id',
+  name: 'name'
+};
+
+exports.Prisma.ChatMessageScalarFieldEnum = {
+  id: 'id',
+  chatRoomId: 'chatRoomId',
+  senderId: 'senderId',
+  content: 'content',
+  timestamp: 'timestamp'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -122,7 +143,10 @@ exports.Prisma.QueryMode = {
 
 exports.Prisma.ModelName = {
   Session: 'Session',
-  User: 'User'
+  User: 'User',
+  Messages: 'Messages',
+  ChatRoom: 'ChatRoom',
+  ChatMessage: 'ChatMessage'
 };
 /**
  * Create the Client
@@ -135,7 +159,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/massoncorlette/repos/PERN-Starter-Template/backend/generated/prisma",
+      "value": "/home/massoncorlette/repos/Message-App/backend/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -149,7 +173,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/home/massoncorlette/repos/PERN-Starter-Template/backend/prisma/schema.prisma",
+    "sourceFilePath": "/home/massoncorlette/repos/Message-App/backend/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -163,7 +187,6 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -172,13 +195,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Session {\n  id        String   @id\n  sid       String   @unique\n  data      String\n  expiresAt DateTime\n}\n\nmodel User {\n  id       Int     @id @default(autoincrement())\n  email    String  @unique\n  is_admin Boolean @default(false)\n  fname    String\n  lname    String\n  alias    String\n  password String\n}\n",
-  "inlineSchemaHash": "bddf97f09085ed8de93a0376e3b25fd4adbea22d41638e631dda30ade9b9c902",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Session {\n  id        String   @id\n  sid       String   @unique\n  data      String\n  expiresAt DateTime\n}\n\nmodel User {\n  id               Int        @id @default(autoincrement())\n  email            String     @unique\n  is_admin         Boolean    @default(false)\n  fname            String\n  lname            String\n  alias            String\n  password         String\n  sentMessages     Messages[] @relation(\"sentMessages\")\n  receivedMessages Messages[] @relation(\"receivedMessages\")\n\n  ChatMessage ChatMessage[]\n}\n\nmodel Messages {\n  id         Int      @id @default(autoincrement())\n  senderId   Int\n  receiverId Int\n  content    String\n  timestamp  DateTime @default(now())\n\n  sender   User @relation(\"sentMessages\", fields: [senderId], references: [id])\n  receiver User @relation(\"receivedMessages\", fields: [receiverId], references: [id])\n}\n\nmodel ChatRoom {\n  id       Int           @id @default(autoincrement())\n  name     String        @unique\n  messages ChatMessage[]\n}\n\nmodel ChatMessage {\n  id         Int      @id @default(autoincrement())\n  chatRoomId Int\n  senderId   Int\n  content    String\n  timestamp  DateTime @default(now())\n\n  chatRoom ChatRoom @relation(fields: [chatRoomId], references: [id])\n  sender   User     @relation(fields: [senderId], references: [id])\n}\n",
+  "inlineSchemaHash": "9716c8243f64c983a7416e43629f785c7e0cc098020286fbc61572bf8cb6dc7c",
   "copyEngine": true
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Session\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"data\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"is_admin\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"fname\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lname\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"alias\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Session\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"data\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"is_admin\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"fname\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lname\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"alias\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sentMessages\",\"kind\":\"object\",\"type\":\"Messages\",\"relationName\":\"sentMessages\"},{\"name\":\"receivedMessages\",\"kind\":\"object\",\"type\":\"Messages\",\"relationName\":\"receivedMessages\"},{\"name\":\"ChatMessage\",\"kind\":\"object\",\"type\":\"ChatMessage\",\"relationName\":\"ChatMessageToUser\"}],\"dbName\":null},\"Messages\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"senderId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"receiverId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"content\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"timestamp\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"sender\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"sentMessages\"},{\"name\":\"receiver\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"receivedMessages\"}],\"dbName\":null},\"ChatRoom\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"messages\",\"kind\":\"object\",\"type\":\"ChatMessage\",\"relationName\":\"ChatMessageToChatRoom\"}],\"dbName\":null},\"ChatMessage\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"chatRoomId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"senderId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"content\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"timestamp\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"chatRoom\",\"kind\":\"object\",\"type\":\"ChatRoom\",\"relationName\":\"ChatMessageToChatRoom\"},{\"name\":\"sender\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"ChatMessageToUser\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = {
   getRuntime: async () => require('./query_engine_bg.js'),

@@ -1,5 +1,5 @@
 // create controller 
-const prisma = require("../../db/prismaClient.js");
+const { prisma } = require("../../db/prismaClient.js");
 const { validationResult } = require("express-validator");
 
 const bcrypt = require("bcryptjs");
@@ -22,6 +22,7 @@ async function handleCreateUser(req, res, next) {
         password: hashedPassword,
       }
    });
+  return res.status(201).json({ message: "Account Created Successfully" });
 
   } catch (error) {
     return res.status(400).json({ errors:error });

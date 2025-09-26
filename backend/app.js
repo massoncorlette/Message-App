@@ -15,10 +15,6 @@ const {homeRouter} = require('./routes/home');
 
 const app = express();
 
-//REMOVE UPON USING REACT
-app.set('view engine', 'ejs'); 
-app.use(express.static(__dirname + "/public"));
-app.use(express.static(__dirname + "/styles"));
 
 app.use(cors());
 app.use(express.json());
