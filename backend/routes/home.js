@@ -22,12 +22,6 @@ homeRouter.get('/', passport.authenticate('jwt', { session: false }), async (req
   });
 });
 
-const profileRouter = require('./profile').profileRouter;
 
-homeRouter.use('/profile', passport.authenticate('jwt', { session: false }), profileRouter);  
-
-const chatRouter = require('./chats').chatRouter;
-
-homeRouter.use('/chats', passport.authenticate('jwt', { session: false }), chatRouter);
 
 module.exports = {homeRouter}

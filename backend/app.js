@@ -11,7 +11,7 @@ const cors = require('cors');
 
 const {indexRouter} = require('./routes/index');
 const {signupRouter} = require('./routes/signup');
-const {homeRouter} = require('./routes/home');
+const {homeRouter: app} = require('./routes/home');
 
 const app = express();
 console.log('DATABASE_URL:', process.env.DATABASE_URL)
@@ -47,7 +47,19 @@ app.use(passport.session());  //enables persistent login sessions
 app.use('/', indexRouter);
 app.use('/sign-up', signupRouter);
 
-app.use('/home', homeRouter);
+app.use('/home', app);
+
+const profileRouter = require('./routes/profile').profileRouter;
+
+app.use('/profile', passport.authenticate('jwt', { session: false }), profileRouter);  
+
+const chatRouter = require('./routes/chats').chatRouter;
+
+app.use('/chats', passport.authenticate('jwt', { session: false }), chatRouter);
+
+const {friendDetailsRouter} = require('./routes/frienddetails');
+
+app.use('/friends', passport.authenticate('jwt', { session: false }), friendDetailsRouter);  
 
 app.post("/log-out", (req, res, next) => {
   req.logout((err) => {
