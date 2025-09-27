@@ -36,6 +36,7 @@ model User {
 
   profile Profile?
   ChatMessage ChatMessage[]
+  ChatRoom   ChatRoom[]
   friends    Friendship[] @relation("UserFriends")
   friendsOf  Friendship[] @relation("FriendOfUser")
 
@@ -78,8 +79,11 @@ model Messages {
 
 model ChatRoom {
   id        Int      @id @default(autoincrement())
+  ownerId   Int
   name      String   @unique
   messages  ChatMessage[]
+
+  owner     User     @relation(fields: [ownerId], references: [id])
 }
 
 model ChatMessage {

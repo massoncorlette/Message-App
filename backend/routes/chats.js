@@ -2,11 +2,15 @@ const Router = require("express");
 const chatRouter = Router();
 var jwt = require('jsonwebtoken');
 
-chatRouter.get('/:id', async (req, res, next ) => {
+chatRouter.post('/', async (req, res, next ) => {
+  res.json({message: "new chat room created"});
+});
+
+chatRouter.get('/:chatRoomId', async (req, res, next ) => {
   res.json({message: "display chat messages"});
 });
 
-chatRouter.post('/:id', async (req, res, next ) => {
+chatRouter.post('/:chatRoomId', async (req, res, next ) => {
   res.json({message: "chat message sent"});
 }); 
 
