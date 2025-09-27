@@ -21,6 +21,8 @@ model Session {
   expiresAt DateTime
 }
 
+
+
 model User {
   id      Int      @id @default(autoincrement())
   email   String   @unique
@@ -32,7 +34,35 @@ model User {
   sentMessages     Messages[] @relation("sentMessages")
   receivedMessages Messages[] @relation("receivedMessages")
 
+  profile Profile?
   ChatMessage ChatMessage[]
+  friends    Friendship[] @relation("UserFriends")
+  friendsOf  Friendship[] @relation("FriendOfUser")
+
+}
+
+
+model Profile {
+  id        Int     @id @default(autoincrement())
+  userId    Int     @unique
+  bio       String?
+  avatarUrl String?
+  status    Boolean  @default(true) // online or offline
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+
+model Friendship {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation("UserFriends", fields: [userId], references: [id])
+  userId    Int
+  friend    User     @relation("FriendOfUser", fields: [friendId], references: [id])
+  friendId  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, friendId]) // Ensures only one unique friendship record per pair of users
 }
 
 model Messages {
