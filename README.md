@@ -1,6 +1,15 @@
 # PERN-Starter-Template
 Starter template, using PERN stack, keeping backend and frontend in seperate directories. 
 
+ToDo:
+ - Plan Feautures (user settings, board rooms, ect)
+  - Online Status, Profile data, Icon Picture, Friends
+ - Plan API Routes (following REST)
+ - Plan Router Routes and start making Pages (setting appropiate children and parents)
+ - Update Prisma Schema
+  - User(status, profile data, cloudify picture link?, Friends[])
+ - Setup Tests to test API Routes
+
 BACKEND directory:
 
 Commands:
