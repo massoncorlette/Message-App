@@ -1,4 +1,6 @@
 const { Router } = require("express");
+const {handleUpdateProfile} = require('../controllers/dataController/updateController');  
+const {handleDeleteProfile} = require('../controllers/dataController/deleteController');
 
 
 const profileRouter = Router();
@@ -9,15 +11,24 @@ profileRouter.get('/', async (req, res, next ) => {
 });
 
 profileRouter.put('/', async (req, res, next ) => {
-  res.json({message: "profile details updated"});
+  try {
+    const updatedProfile = await handleUpdateProfile(req, res, next);
+    return res.json(updatedProfile);
+  } catch (error) {
+    next(error);
+  }
 }); 
 
-profileRouter.put('/avatar', async (req, res, next ) => {
-  res.json({message: "profile avatar updated"});
-});
+// route for avatar ?
+
 
 profileRouter.delete('/', async (req, res, next ) => {
-  res.json({message: "profile deleted"});
+  try {
+    await handleDeleteProfile(req, res, next);
+    return res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = {profileRouter};

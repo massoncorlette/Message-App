@@ -1,15 +1,30 @@
 const friendDetailsRouter = require('express').Router();
+const {getUserData} = require('../controllers/viewController');
+const { handleAddFriend } = require('../controllers/dataController/updateController');  
 
 friendDetailsRouter.get('/:friendId', async (req, res, next) => {
-  res.json({message: "display friend details"});
+  try {
+    const userData = await getUserData(req, res, next);
+    return res.json(userData);
+  } catch (error) {
+    next(error);
+  }
 });
 
 friendDetailsRouter.post('/:friendId', async (req, res, next) => {
-  res.json({message: "add as a friend"});
+  try {
+   const friendshipStatus = await handleAddFriend(req, res, next);
+    if (!(friendshipStatus)) {
+     return res.status(201).json({message: "removed from friends"});
+    } else {
+     return res.status(201).json({message: "added to friends"});   
+    }
+
+  } catch (error) {
+    next(error);
+  }
 }); 
 
-friendDetailsRouter.delete('/:friendId', async (req, res, next) => {
-  res.json({message: "remove from friends"});
-});
+
 
 module.exports = {friendDetailsRouter};

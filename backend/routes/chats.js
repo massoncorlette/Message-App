@@ -11,7 +11,7 @@ chatRouter.get('/:chatRoomId', async (req, res, next ) => {
 
   try {
     const chatRoomData = await getChatRoom(req, res, next);
-    res.json(chatRoomData);
+    return res.json(chatRoomData);
   } catch (error) {
     res.status(400).json({ errors:error });
   }

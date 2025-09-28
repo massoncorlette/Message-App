@@ -36,4 +36,4 @@ async function handleDeleteChatRoom(req, res, next) {
   }
 };
 
-module.exports = { handleDeleteUser };
+module.exports = { handleDeleteUser, handleDeleteChatRoom };
