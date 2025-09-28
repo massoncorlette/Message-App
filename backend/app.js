@@ -11,7 +11,7 @@ const cors = require('cors');
 
 const {indexRouter} = require('./routes/index');
 const {signupRouter} = require('./routes/signup');
-const {homeRouter: app} = require('./routes/home');
+const {homeRouter} = require('./routes/home');
 
 const app = express();
 console.log('DATABASE_URL:', process.env.DATABASE_URL)
@@ -47,7 +47,7 @@ app.use(passport.session());  //enables persistent login sessions
 app.use('/', indexRouter);
 app.use('/sign-up', signupRouter);
 
-app.use('/home', app);
+app.use('/home', homeRouter);
 
 // all mount level routes below here require authentication for every request 
 const profileRouter = require('./routes/profile').profileRouter;

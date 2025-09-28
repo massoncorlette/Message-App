@@ -72,8 +72,34 @@ function validateUser() {
   ]
 };
 
+function validateCreateChatRoom() {
+  return [
+    body("roomName")
+      .trim()
+      .notEmpty().withMessage("Chat room name is required")
+      .bail()
+      .isLength({ min: 1, max: 24 })
+      .withMessage(`Chat room name ${lengthErr}`)
+      .bail(),
+  ];
+};
+
+function validateCreateMessage() {
+  return [
+    body("content")
+      .trim()
+      .notEmpty().withMessage("Message content is required")
+      .bail()
+      .isLength({ min: 1, max: 255 })
+      .withMessage(`Message content must be between 1 and 255 characters.`)
+      .bail(),
+  ];
+};
+
 
 module.exports = {
    validateCreateUser,
    validateUser,
+    validateCreateChatRoom,
+    validateCreateMessage
 }

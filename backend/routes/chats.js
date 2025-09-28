@@ -1,17 +1,22 @@
 const Router = require("express");
 const chatRouter = Router();
-var jwt = require('jsonwebtoken');
+const {validateCreateChatRoom, validateCreateMessage} = require('../controllers/validation'); 
 
-chatRouter.post('/', async (req, res, next ) => {
-  res.json({message: "new chat room created"});
-});
+const {handleCreateChatRoom, handleCreateChatMessage } = require('../controllers/dataController/createController');
+const {getChatRoom, getChatMessages} = require('../controllers/viewController');
+
+chatRouter.post('/', validateCreateChatRoom(), handleCreateChatRoom);
 
 chatRouter.get('/:chatRoomId', async (req, res, next ) => {
-  res.json({message: "display chat messages"});
+
+  try {
+    const chatRoomData = await getChatRoom(req, res, next);
+    res.json(chatRoomData);
+  } catch (error) {
+    res.status(400).json({ errors:error });
+  }
 });
 
-chatRouter.post('/:chatRoomId', async (req, res, next ) => {
-  res.json({message: "chat message sent"});
-}); 
+chatRouter.post('/:chatRoomId/message', validateCreateMessage(), handleCreateChatMessage); 
 
 module.exports = {chatRouter};

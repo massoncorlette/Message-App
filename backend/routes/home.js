@@ -13,6 +13,7 @@ homeRouter.get('/', passport.authenticate('jwt', { session: false }), async (req
   // req.user from passport callback authentication
   res.json({
     user: {
+      id: req.user.id,
       alias: req.user.alias,
       first: req.user.fname,
       last: req.user.lname,

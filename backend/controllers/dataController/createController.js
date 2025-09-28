@@ -7,9 +7,9 @@ const bcrypt = require("bcryptjs");
 
 async function handleCreateUser(req, res, next) {
   const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
+     if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+  };
 
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -37,12 +37,12 @@ async function handleCreateMessage(req, res, next) {
 
   try {
     const { content } = req.body;
-    await prisma.messages.create({
+    await prisma.chatMessage.create({
       data: {
         content: content,
       }
    });
-  return res.status(201).json({ message: "Message Created Successfully" });
+  return res.status(201).json({ content: req.body.content, message: "Message Created Successfully" });
 
   } catch (error) {
     return res.status(400).json({ errors:error });
@@ -53,12 +53,15 @@ async function handleCreateChatRoom(req, res, next) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
+
   }
 
   try {
     const { roomName } = req.body;
+    console.log(roomName);
     await prisma.chatRoom.create({
       data: {
+        ownerId: 1, // parseInt(req.user.id, 10)
         name: roomName,
       }
    });
@@ -76,19 +79,19 @@ async function handleCreateChatMessage(req, res, next) {
   }
 
   try {
-    const userId = parseInt(req.user.id, 10);
+    const userId = 1 // parseInt(req.user.id, 10);
     const chatRoomId = parseInt(req.params.chatRoomId, 10);
     const { content } = req.body;
 
     const newMessage = await prisma.chatMessage.create({
       data: {
         content: content,
-        userId: userId,
+        senderId: userId,
         chatRoomId: chatRoomId
       },
     });
 
-    res.status(201).json({ message: "Message sent successfully", data: newMessage });
+    res.status(201).json({ message: "Message sent successfully", content: newMessage.content });
   } catch (error) {
     next(error);
   }

@@ -1,9 +1,11 @@
 const { Router } = require("express");
 
+
 const profileRouter = Router();
 
 profileRouter.get('/', async (req, res, next ) => {
-  res.json({message: "display profile details"});
+
+  res.json({profileData: req.user.profile });
 });
 
 profileRouter.put('/', async (req, res, next ) => {
